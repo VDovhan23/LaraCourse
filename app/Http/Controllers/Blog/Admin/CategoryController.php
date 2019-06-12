@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Blog\Admin;
 
 use App\Models\BlogCategory;
 use Illuminate\Http\Request;
+use App\Http\Requests\BlogCategoryUpdateRequest;
 
 class CategoryController extends BaseController
 {
@@ -20,7 +21,7 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        $paginate = BlogCategory::paginate(5);
+        $paginate = BlogCategory::paginate(10);
         return view('blog.admin.categories.index', compact("paginate"));
     }
 
@@ -31,7 +32,10 @@ class CategoryController extends BaseController
      */
     public function create()
     {
-        dd(__METHOD__);
+        $item = new BlogCategory;
+        $categoryList = BlogCategory::all();
+
+        return view('blog.admin.categories.edit', compact('item', 'categoryList'));
     }
 
     /**
@@ -40,9 +44,10 @@ class CategoryController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BlogCategoryCreateRequest $request)
     {
-        //
+        $data=  $request->input();
+        empty($data['slug']) ? $data['slug'] = str_slug($data['tuitle']) : '' ;
     }
 
 
@@ -67,8 +72,9 @@ class CategoryController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(BlogCategoryUpdateRequest $request, $id)
     {
+
         $item = BlogCategory::find($id);
         if (empty($item))  {
             return back()
@@ -80,7 +86,6 @@ class CategoryController extends BaseController
         $result = $item
             ->fill($data)
             ->save();
-
 
         if ($result) {
             return redirect()
