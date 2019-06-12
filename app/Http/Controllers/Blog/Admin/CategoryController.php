@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Blog\Admin;
 use App\Models\BlogCategory;
 use Illuminate\Http\Request;
 use App\Http\Requests\BlogCategoryUpdateRequest;
+use App\Http\Requests\BlogCategoryCreateRequest;
 
 class CategoryController extends BaseController
 {
@@ -48,6 +49,17 @@ class CategoryController extends BaseController
     {
         $data=  $request->input();
         empty($data['slug']) ? $data['slug'] = str_slug($data['tuitle']) : '' ;
+
+        $item =(new BlogCategory())->create($data);
+
+        if ($item) {
+            return redirect()->route('blog.admin.categories.edit', [$item->id])
+            ->with(['success'=> "Saved"]);
+        } else{
+            return back()
+            ->withErrors(['msg' =>'Seve is failed'])
+            ->withInput();
+        }
     }
 
 
@@ -84,8 +96,7 @@ class CategoryController extends BaseController
 
         $data = $request->all();
         $result = $item
-            ->fill($data)
-            ->save();
+            ->update($data);
 
         if ($result) {
             return redirect()
