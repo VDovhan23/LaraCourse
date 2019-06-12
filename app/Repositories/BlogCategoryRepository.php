@@ -18,8 +18,29 @@ class BlogCategoryRepository extends CoreRepository
         return $this->startConditions()->find($id);
     }
 
+    public function getAllWithPaginate($perPage = null)
+    {
+        $collums = ['id', 'title', 'parent_id'];
+
+        return $this
+            ->startConditions()
+            ->select($collums)
+            ->paginate($perPage);
+    }
+
     public function getForComboBox()
     {
-        return $this->startConditions()->all();
+
+        $collums = implode(', ', [
+            'id',
+            'CONCAT(id, ". ", title) AS id_title'
+        ]);
+        $result = $this
+            ->startConditions()
+            ->selectRaw($collums)
+            ->toBase()
+            ->get();
+
+        return $result;
     }
 }

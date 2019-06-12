@@ -10,10 +10,13 @@ use App\Repositories\BlogCategoryRepository;
 
 class CategoryController extends BaseController
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    // }
+    private $blogCategoryRepository;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->blogCategoryRepository = app(blogCategoryRepository::class);
+    }
 
     /**
      *
@@ -23,7 +26,8 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        $paginate = BlogCategory::paginate(10);
+        // $paginate = BlogCategory::paginate(10);
+        $paginate =  $this->blogCategoryRepository->getAllWithPaginate(5);
         return view('blog.admin.categories.index', compact("paginate"));
     }
 
@@ -35,7 +39,7 @@ class CategoryController extends BaseController
     public function create()
     {
         $item = new BlogCategory;
-        $categoryList = BlogCategory::all();
+        $categoryList = $this->blogCategoryRepository->getForComboBox();
 
         return view('blog.admin.categories.edit', compact('item', 'categoryList'));
     }
@@ -70,16 +74,18 @@ class CategoryController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id, BlogCategoryRepository $categoryRepository )
+    public function edit($id, BlogCategoryRepository $categoryRepository)
     {
         // $item = BlogCategory::findOrFail($id);
         // $categoryList = BlogCategory::all();
 
-        $categoryList = $categoryRepository ->getForComboBox();
+
         $item = $categoryRepository->getEdit($id);
-        if(empty($item)){
+        if (empty($item)) {
             abort(404);
         }
+
+        $categoryList = $categoryRepository->getForComboBox();
 
         return view('blog.admin.categories.edit', compact('item', 'categoryList'));
     }
@@ -94,7 +100,7 @@ class CategoryController extends BaseController
     public function update(BlogCategoryUpdateRequest $request, $id)
     {
 
-        $item = BlogCategory::find($id);
+        $item = $this->blogCategoryRepository->getEdit($id);
         if (empty($item)) {
             return back()
                 ->withErrors(['msg' => 'Record with id=' . $id . ' not found'])
