@@ -13,7 +13,7 @@
                     <div class="tab-pane active" id="maindata" role="tabpanel">
                         <div class="form-group">
                             <label for="title">Title</label>
-                            <input type="text" value="{{$item->title}}"
+                            <input type="text" value=" {{old('title', $item->title)}}"
                                 id="title"
                                 name="title"
                                 class="form-control"
@@ -21,15 +21,15 @@
                                 required>
                         </div>
                         <div class="form-group">
-                            <label for="slug">ID</label>
-                            <input type="text" value="{{$item->title}}"
+                            <label for="slug">Slug</label>
+                            <input type="text" value=" {{old('slug', $item->slug)}}"
                                 id="slug"
                                 name="slug"
                                 class="form-control">
                         </div>
                         <div class="form-group">
                             <label for="parent_id">Parent</label>
-                            <select type="text" value="{{$item->title}}"
+                            <select type="text" value="{{$item->parent_id}}"
                                 id="parent_id"
                                 name="parent_id"
                                 class="form-control"
@@ -51,7 +51,7 @@
                                     name="description"
                                     class="form-control"
                                     rows="3">
-                                    {{$item->description}}
+                                    {{old('description', $item->description)}}
                                 </textarea>
                             </div>
                     </div>
