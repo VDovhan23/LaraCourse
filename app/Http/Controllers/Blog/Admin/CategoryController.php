@@ -6,6 +6,7 @@ use App\Models\BlogCategory;
 use Illuminate\Http\Request;
 use App\Http\Requests\BlogCategoryUpdateRequest;
 use App\Http\Requests\BlogCategoryCreateRequest;
+use App\Repositories\BlogCategoryRepository;
 
 class CategoryController extends BaseController
 {
@@ -47,18 +48,18 @@ class CategoryController extends BaseController
      */
     public function store(BlogCategoryCreateRequest $request)
     {
-        $data=  $request->input();
-        empty($data['slug']) ? $data['slug'] = str_slug($data['tuitle']) : '' ;
+        $data =  $request->input();
+        empty($data['slug']) ? $data['slug'] = str_slug($data['tuitle']) : '';
 
-        $item =(new BlogCategory())->create($data);
+        $item = (new BlogCategory())->create($data);
 
         if ($item) {
             return redirect()->route('blog.admin.categories.edit', [$item->id])
-            ->with(['success'=> "Saved"]);
-        } else{
+                ->with(['success' => "Saved"]);
+        } else {
             return back()
-            ->withErrors(['msg' =>'Seve is failed'])
-            ->withInput();
+                ->withErrors(['msg' => 'Seve is failed'])
+                ->withInput();
         }
     }
 
@@ -69,10 +70,16 @@ class CategoryController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, BlogCategoryRepository $categoryRepository )
     {
-        $item = BlogCategory::findOrFail($id);
-        $categoryList = BlogCategory::all();
+        // $item = BlogCategory::findOrFail($id);
+        // $categoryList = BlogCategory::all();
+
+        $categoryList = $categoryRepository ->getForComboBox();
+        $item = $categoryRepository->getEdit($id);
+        if(empty($item)){
+            abort(404);
+        }
 
         return view('blog.admin.categories.edit', compact('item', 'categoryList'));
     }
@@ -88,10 +95,10 @@ class CategoryController extends BaseController
     {
 
         $item = BlogCategory::find($id);
-        if (empty($item))  {
+        if (empty($item)) {
             return back()
-            ->withErrors(['msg' =>'Record with id='.$id.' not found'])
-            ->withInput();
+                ->withErrors(['msg' => 'Record with id=' . $id . ' not found'])
+                ->withInput();
         }
 
         $data = $request->all();
@@ -100,12 +107,12 @@ class CategoryController extends BaseController
 
         if ($result) {
             return redirect()
-            ->route('blog.admin.categories.edit', $item->id)
-            ->with(['success' => "Updated"]);
+                ->route('blog.admin.categories.edit', $item->id)
+                ->with(['success' => "Updated"]);
         } else {
             return back()
-            ->withErrors(['msg' =>'Seve is failed'])
-            ->withInput();
+                ->withErrors(['msg' => 'Seve is failed'])
+                ->withInput();
         }
     }
 }
