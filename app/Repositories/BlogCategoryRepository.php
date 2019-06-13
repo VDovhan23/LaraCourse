@@ -2,7 +2,6 @@
 namespace App\Repositories;
 
 use App\Models\BlogCategory as Model;
-use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CoreRepository;
 
 class BlogCategoryRepository extends CoreRepository
@@ -20,24 +19,24 @@ class BlogCategoryRepository extends CoreRepository
 
     public function getAllWithPaginate($perPage = null)
     {
-        $collums = ['id', 'title', 'parent_id'];
+        $columns = ['id', 'title', 'parent_id'];
 
         return $this
             ->startConditions()
-            ->select($collums)
+            ->select($columns)
             ->paginate($perPage);
     }
 
     public function getForComboBox()
     {
 
-        $collums = implode(', ', [
+        $columns = implode(', ', [
             'id',
             'CONCAT(id, ". ", title) AS id_title'
         ]);
         $result = $this
             ->startConditions()
-            ->selectRaw($collums)
+            ->selectRaw($columns)
             ->toBase()
             ->get();
 
