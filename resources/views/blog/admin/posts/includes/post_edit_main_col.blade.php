@@ -67,7 +67,7 @@
                                        >
                                 </div>
                              <div class="form-group">
-                                    <label for="excerpt">Slug</label>
+                                    <label for="excerpt">Excerpt</label>
                                     <input type="text" value=" {{old('excerpt', $item->excerpt)}}"
                                         id="excerpt"
                                         name="excerpt"

@@ -117,7 +117,7 @@ class CategoryController extends BaseController
                 ->with(['success' => "Updated"]);
         } else {
             return back()
-                ->withErrors(['msg' => 'Seve is failed'])
+                ->withErrors(['msg' => 'Save is failed'])
                 ->withInput();
         }
     }

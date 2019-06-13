@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\BlogPostRepository;
 use App\Repositories\BlogCategoryRepository;
-
+use App\Http\Requests\PostUpdateRequest;
+use Carbon\Carbon;
 
 class PostController extends BaseController
 {
@@ -88,9 +89,38 @@ class PostController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostUpdateRequest $request, $id)
     {
-        dd(__METHOD__, $request->all(), $id);
+        $item = $this->blogPostRepository->getEdit($id);
+        if (empty($item)) {
+            return back()
+                ->withErrors(['msg' => 'Record with id=' . $id . ' not found'])
+                ->withInput();
+        }
+
+        $data = $request->all();
+
+        //v observer
+        if (empty($data['slug'])) {
+            $data['slug']= str_slug($data['title']);
+        }
+        if (empty($item->published_at) && $data['is_published']) {
+            $data['published_at'] = Carbon::now();
+        }
+        //v observer
+
+        $result = $item->update($data);
+
+        if ($result) {
+            return redirect()
+                ->route('blog.admin.posts.edit', $item->id)
+                ->with(['success' => "Updated"]);
+        } else {
+            return back()
+                ->withErrors(['msg' => 'Save is failed'])
+                ->withInput();
+        }
+
     }
 
     /**
