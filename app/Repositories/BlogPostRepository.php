@@ -20,8 +20,16 @@ class BlogPostRepository extends CoreRepository
         $result = $this->startConditions()
             ->select($columns)
             ->orderBy('id', "DESC")
+            ->with(['category:id,title', 'user:id,name']) // вказівка на звязки які треба підтягнути
             ->paginate(25);
 
         return $result;
     }
+
+    public function getEdit($id)
+    {
+        return $this->startConditions()->find($id);
+    }
+
+
 }

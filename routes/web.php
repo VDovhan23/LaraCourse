@@ -24,8 +24,6 @@ Route::group(['prefix' => 'admin/blog', 'namespace' => 'Blog\Admin'], function (
     Route::resource('posts', 'PostController')
         ->except('show')
         ->names('blog.admin.posts');
-
-
 });
 
 

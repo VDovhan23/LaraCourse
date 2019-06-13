@@ -10,4 +10,10 @@ class BlogCategory extends Model
     use SoftDeletes;
 
     protected $guarded = [];
+
+
+    public function posts()
+    {
+        return $this->hasMany(BlogPost::class);
+    }
 }

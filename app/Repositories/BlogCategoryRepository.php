@@ -29,7 +29,6 @@ class BlogCategoryRepository extends CoreRepository
 
     public function getForComboBox()
     {
-
         $columns = implode(', ', [
             'id',
             'CONCAT(id, ". ", title) AS id_title'
