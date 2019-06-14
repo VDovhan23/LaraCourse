@@ -7,10 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Repositories\BlogPostRepository;
 use App\Repositories\BlogCategoryRepository;
 use App\Http\Requests\PostUpdateRequest;
-
-
-
-
+use App\Models\BlogPost;
+use App\Http\Requests\PostCreateRequest;
 
 class PostController extends BaseController
 {
@@ -42,7 +40,10 @@ class PostController extends BaseController
      */
     public function create()
     {
-        dd(__METHOD__);
+        $item = new BlogPost();
+        $categoryList = $this->blogCategoryRepository->getForComboBox();
+
+        return view('blog.admin.posts.edit', compact('item', 'categoryList'));
     }
 
     /**
@@ -51,9 +52,20 @@ class PostController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostCreateRequest $request)
     {
-        dd(__METHOD__);
+        $data = $request->input();
+        $item = (new BlogPost())->create($data);
+
+        if ($item) {
+            return redirect()
+                ->route('blog.admin.posts.edit', $item->id)
+                ->with(['success' => "Created"]);
+        } else {
+            return back()
+                ->withErrors(['msg' => 'Save is failed'])
+                ->withInput();
+        }
     }
 
     /**

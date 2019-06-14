@@ -12,6 +12,10 @@ class BlogСategoryObserver
      * @param  \App\Models\BlogCategory  $blogCategory
      * @return void
      */
+    public function creating(BlogCategory $blogCategory)
+    {
+        $this->setSlug($blogCategory);
+    }
     public function created(BlogCategory $blogCategory)
     {
         //
@@ -23,6 +27,13 @@ class BlogСategoryObserver
      * @param  \App\Models\BlogCategory  $blogCategory
      * @return void
      */
+    public function updating(BlogCategory $blogCategory)
+
+    {
+        $this->setSlug($blogCategory);
+    }
+
+
     public function updated(BlogCategory $blogCategory)
     {
         //
@@ -60,4 +71,10 @@ class BlogСategoryObserver
     {
         //
     }
+
+    protected function setSlug(BlogCategory $blogCategory)
+    {
+        empty($blogCategory->slug) ? $blogCategory->slug = str_slug($blogCategory->title) : '';
+    }
+
 }

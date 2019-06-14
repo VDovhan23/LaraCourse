@@ -13,6 +13,17 @@ class BlogPostObserver
      * @param  \App\Models\BlogPost  $blogPost
      * @return void
      */
+    public function creating(BlogPost $blogPost)
+    {
+
+        $this->setPublishedAt($blogPost);
+
+        $this->setSlug($blogPost);
+
+        $this->setHtml($blogPost);
+
+        $this->setUser($blogPost);
+    }
     public function created(BlogPost $blogPost)
     {
         //
@@ -30,6 +41,8 @@ class BlogPostObserver
         $this->setPublishedAt($blogPost);
 
         $this->setSlug($blogPost);
+
+
 
     }
 
@@ -94,5 +107,16 @@ class BlogPostObserver
         if (empty($blogPost->slug)) {
             $blogPost->slug= str_slug($blogPost->title);
         }
+    }
+    protected function setHtml(BlogPost $blogPost)
+    {
+        if ($blogPost->isDirty('content_raw')) {
+            $blogPost->content_html = $blogPost->content_raw;
+        }
+    }
+
+    protected function setUser(BlogPost $blogPost)
+    {
+        $blogPost->user_id = auth()->id() ?? BlogPost::UNKNOWN_USER;
     }
 }
