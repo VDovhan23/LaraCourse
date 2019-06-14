@@ -7,7 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Repositories\BlogPostRepository;
 use App\Repositories\BlogCategoryRepository;
 use App\Http\Requests\PostUpdateRequest;
-use Carbon\Carbon;
+
+
+
+
 
 class PostController extends BaseController
 {
@@ -91,6 +94,7 @@ class PostController extends BaseController
      */
     public function update(PostUpdateRequest $request, $id)
     {
+
         $item = $this->blogPostRepository->getEdit($id);
         if (empty($item)) {
             return back()
@@ -99,15 +103,6 @@ class PostController extends BaseController
         }
 
         $data = $request->all();
-
-        //v observer
-        if (empty($data['slug'])) {
-            $data['slug']= str_slug($data['title']);
-        }
-        if (empty($item->published_at) && $data['is_published']) {
-            $data['published_at'] = Carbon::now();
-        }
-        //v observer
 
         $result = $item->update($data);
 
