@@ -23,7 +23,7 @@
                                         <td>{{$item->id}}</td>
                                         <td>
                                             <a href="{{route('blog.admin.categories.edit', $item->id)}}">
-                                                {{-- {{$item->title}} --}}
+                                                {{$item->title}}
                                                 {{$item->allBig}}
                                             </a>
                                         </td>

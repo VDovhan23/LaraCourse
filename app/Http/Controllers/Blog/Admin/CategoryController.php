@@ -77,6 +77,18 @@ class CategoryController extends BaseController
     {
 
         $item = $blogCategoryRepository->getEdit($id);
+
+        $v['title_before'] = $item->title;
+
+        $item->title = $item->getAttribute('title');
+        $v['att'] = $item->attributesToArray();
+        $v['array'] = $item->toArray();
+
+        $v['mutated'] = $item->getMutatedAttributes();
+
+        $v['title_after'] = $item->title;
+
+        dd($v, $item);
         if (empty($item)) {
             abort(404);
         }
