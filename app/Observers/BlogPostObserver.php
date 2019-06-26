@@ -37,13 +37,9 @@ class BlogPostObserver
      */
     public function updating(BlogPost $blogPost)
     {
-
         $this->setPublishedAt($blogPost);
 
         $this->setSlug($blogPost);
-
-
-
     }
 
 
@@ -58,9 +54,13 @@ class BlogPostObserver
      * @param  \App\Models\BlogPost  $blogPost
      * @return void
      */
+    public function deleting(BlogPost $blogPost)
+    {
+
+    }
     public function deleted(BlogPost $blogPost)
     {
-        //
+
     }
 
     /**

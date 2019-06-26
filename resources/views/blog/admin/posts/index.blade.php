@@ -9,6 +9,7 @@
                 </div>
             </div>
         @endif
+        @include('blog.admin.posts.includes.result_messages')
 
 
     <div class="row justify-content-center">
